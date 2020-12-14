@@ -1,8 +1,5 @@
 package dev.dhoncrisley.javecommerce.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,26 +13,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import dev.dhoncrisley.javecommerce.entity.PedidoProdutos;
-import dev.dhoncrisley.javecommerce.entity.Pedidos;
 import dev.dhoncrisley.javecommerce.repository.PedidoProdutosRepository;
-import dev.dhoncrisley.javecommerce.repository.PedidosRepository;
 
 @RestController
-@RequestMapping("/pedidos")
-class PedidosController {
+@RequestMapping("/pedido_produtos")
+class PedidoProdutosController {
 
     @Autowired
-    PedidosRepository pr;
-    @Autowired
-    PedidoProdutosRepository ppr;
+    PedidoProdutosRepository repository;
 
     @GetMapping
-    public ResponseEntity<List<Pedidos>> getAll() {
+    public ResponseEntity<List<PedidoProdutos>> getAll() {
         try {
-            List<Pedidos> items = new ArrayList<Pedidos>();
+            List<PedidoProdutos> items = new ArrayList<PedidoProdutos>();
 
-            pr.findAll().forEach(items::add);
+            repository.findAll().forEach(items::add);
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,38 +44,33 @@ class PedidosController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Pedidos> getById(@PathVariable("id") long id) {
-        Optional<Pedidos> existingItemOptional = pr.findById(id);
-        if(existingItemOptional.isPresent()){
-            Pedidos pedido = existingItemOptional.get();
-            Iterable<PedidoProdutos> carrinho = ppr.findAll();
-            return new ResponseEntity<Pedidos>(pedido, HttpStatus.OK);
-        }else{
-            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<PedidoProdutos> getById(@PathVariable("id") long id) {
+        Optional<PedidoProdutos> existingItemOptional = repository.findById(id);
 
+        return existingItemOptional.map(cupons -> new ResponseEntity<>(cupons, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<Pedidos> create(@RequestBody Pedidos item) {
+    public ResponseEntity<PedidoProdutos> create(@RequestBody PedidoProdutos item) {
         try {
-            Pedidos savedItem = pr.save(item);
+            System.out.print(item.toString());
+            PedidoProdutos savedItem = repository.save(item);
+
             return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
         } catch (Exception e) {
+
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Pedidos> update(@PathVariable("id") long id, @RequestBody Pedidos item) {
-        Optional<Pedidos> existingItemOptional = pr.findById(id);
+    public ResponseEntity<PedidoProdutos> update(@PathVariable("id") long id, @RequestBody PedidoProdutos item) {
+        Optional<PedidoProdutos> existingItemOptional = repository.findById(id);
         if (existingItemOptional.isPresent()) {
-            Pedidos existingItem = existingItemOptional.get();
-
-            existingItem.setSubtotal(item.getSubtotal());
+            PedidoProdutos existingItem = existingItemOptional.get();
             System.out.println("TODO for developer - update logic is unique to entity and must be implemented manually.");
             //existingItem.setSomeField(item.getSomeField());
-            return new ResponseEntity<>(pr.save(existingItem), HttpStatus.OK);
+            return new ResponseEntity<>(repository.save(existingItem), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -87,7 +79,7 @@ class PedidosController {
     @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") long id) {
         try {
-            pr.deleteById(id);
+            repository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

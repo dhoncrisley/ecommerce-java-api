@@ -2,11 +2,25 @@ package dev.dhoncrisley.javecommerce.entity;
 
 
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+// import java.util.ArrayList;
+// import java.util.Set;
+
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+// import javax.persistence.OneToMany;
 
 @Entity
 public
@@ -23,6 +37,10 @@ class Pedidos {
     private double desconto;
     @Column(nullable = true)
     private String cupom_ativo;
+
+    @OneToMany
+    private List<PedidoProdutos> carrinho = new ArrayList<>();
+
 
     public Pedidos() {
     }
@@ -67,4 +85,7 @@ class Pedidos {
     public void setCupom_ativo(String cupom_ativo) {
         this.cupom_ativo = cupom_ativo;
     }
+
+
+
 }

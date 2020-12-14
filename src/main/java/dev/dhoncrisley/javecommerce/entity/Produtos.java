@@ -30,12 +30,12 @@ public class Produtos {
         this.id = id;
     }
 
-    public String getSubtotal() {
+    public String getNome() {
         return nome;
     }
 
-    public void setSubtotal(String subtotal) {
-        this.nome = subtotal;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public double getValor() {
@@ -46,5 +46,11 @@ public class Produtos {
         this.valor = valor;
     }
 
-
+    public String toString(){
+        String str = "";
+        str += "id: " + getId();
+        str += "\nnome: " + getNome();
+        str += "\nvalor: " + getValor();
+        return str;
+    }
 }

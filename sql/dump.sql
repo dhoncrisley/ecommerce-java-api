@@ -7,6 +7,7 @@ USE `store_java`;
 CREATE TABLE `cupons` (
   `id` varchar(45) NOT NULL,
   `desconto` double(4,2) NOT NULL,
+  `validade` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 # TABLE: `store_java`.`hibernate_sequence`
@@ -23,7 +24,7 @@ CREATE TABLE `pedidos` (
   PRIMARY KEY (`id`),
   KEY `FK_pedidos_cupons_idx` (`cupom_ativo`),
   CONSTRAINT `FK_pedidos_cupons` FOREIGN KEY (`cupom_ativo`) REFERENCES `cupons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 # TABLE: `store_java`.`pedido_cupons`
 CREATE TABLE `pedido_cupons` (
   `id_pedido` int(11) NOT NULL,
@@ -47,13 +48,13 @@ CREATE TABLE `pedido_produtos` (
   KEY `FK_pedido_produtos_pedidos_idx` (`id_pedido`),
   CONSTRAINT `FK_pedido_produtos_pedidos` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_pedido_produtos_produto` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 # TABLE: `store_java`.`produtos`
 CREATE TABLE `produtos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(80) NOT NULL,
   `valor` double(13,2) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 #...done.
 SET FOREIGN_KEY_CHECKS=1;

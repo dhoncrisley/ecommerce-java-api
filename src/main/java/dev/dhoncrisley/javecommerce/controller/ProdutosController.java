@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.dhoncrisley.javecommerce.entity.Produtos;
+
 import dev.dhoncrisley.javecommerce.repository.ProdutosRepository;
 
 @RestController
 @RequestMapping("/produtos")
 class ProdutosController {
+    final private String TAG = "PRODUTOS";
 
     @Autowired
     ProdutosRepository repository;
@@ -54,9 +57,12 @@ class ProdutosController {
     @PostMapping
     public ResponseEntity<Produtos> create(@RequestBody Produtos item) {
         try {
+            System.out.print(item.toString());
             Produtos savedItem = repository.save(item);
+
             return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
         } catch (Exception e) {
+
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }
